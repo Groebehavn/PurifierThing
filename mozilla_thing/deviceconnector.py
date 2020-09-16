@@ -1,32 +1,17 @@
-'''
-Created on 2020. szept. 15.
-
-@author: pepot
-'''
-import sys
-
-from pyairctrl.airctrl import HTTPAirCli
+from pyairctrl.http_client import HTTPAirClient
+from builtins import staticmethod
 
 class DeviceConnector(object):
-    '''
-    classdocs
-    '''
-
-    def __init__(self):
-        '''
-        Constructor
-        '''
-        
     
-    def connect(self):
-        #devices = HTTPAirCli.ssdp()
-        #if not devices:
-        #    print(
-        #        "Air purifier not autodetected. Try --ipaddr option to force specific IP address."
-        #    )
-        #    sys.exit(1)
-        #for device in devices:
-            c = HTTPAirCli("192.168.0.143")
-            print(
-                c.get_status()
-            )
+    @staticmethod
+    def toggleOnOff():
+        device = HTTPAirClient("192.168.0.143")
+        data = device.get_status()
+        
+        values = {}
+        if data["pwr"] == "0" :
+            values["pwr"] = "1"
+        else :
+            values["pwr"] = "0"
+        
+        device.set_values(values)
